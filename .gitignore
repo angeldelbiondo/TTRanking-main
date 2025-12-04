@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# SonarQube
+.sonar/
+.scannerwork/
+*.log
+.sonar_lock
+report-task.txt
