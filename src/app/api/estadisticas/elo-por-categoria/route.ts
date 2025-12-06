@@ -14,7 +14,7 @@ export async function GET() {
       }
     });
     
-   const result = eloPorCategoria.map((categoria: {
+  const result = eloPorCategoria.map((categoria: {
       nombre: string
       jugadores: { elo: number | null }[]
     }) => {
@@ -33,10 +33,13 @@ export async function GET() {
     });
     
     return NextResponse.json(result);
-  } catch (error) {
+  }catch (error) {
+    // 1. Registra el error real para que lo veas en los logs del servidor.
+    console.error('Error crítico en el endpoint:', error); 
+    // 2. Luego devuelve la respuesta al cliente
     return NextResponse.json(
-      { message: "Error al obtener estadísticas" },
-      { status: 500 }
+        { message: "Error al obtener estadísticas" },
+        { status: 500 }
     );
   }
 }

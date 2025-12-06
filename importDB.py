@@ -69,22 +69,13 @@ try:
         
         # Leer hoja con manejo de diferentes estructuras
         df = pd.read_excel(excel_path, sheet_name=hoja, skiprows=skiprows)
-        
-        # Renombrar columnas según estructura
-        if hoja == 'Segunda':
-            # Verificar si hay suficientes columnas
-            if len(df.columns) >= 3:
-                df.columns = ['nombre', 'club', 'elo']
-            else:
-                print(f"Error: Hoja '{hoja}' no tiene suficientes columnas. Saltando...")
-                continue
+
+        # Verificar si hay suficientes columnas
+        if len(df.columns) >= 3:
+            df.columns = ['nombre', 'club', 'elo']
         else:
-            # Verificar si hay suficientes columnas
-            if len(df.columns) >= 3:
-                df.columns = ['nombre', 'club', 'elo']
-            else:
-                print(f"Error: Hoja '{hoja}' no tiene suficientes columnas. Saltando...")
-                continue
+            print(f"Error: Hoja '{hoja}' no tiene suficientes columnas. Saltando...")
+            continue
         
         # Filtrar filas vacías y recolectar clubes
         df = df[df['nombre'].notna() & (df['nombre'] != '')]
@@ -109,21 +100,12 @@ try:
         # Leer hoja con manejo de diferentes estructuras
         df = pd.read_excel(excel_path, sheet_name=hoja, skiprows=skiprows)
         
-        # Renombrar columnas según estructura
-        if hoja == 'Segunda':
-            # Verificar si hay suficientes columnas
-            if len(df.columns) >= 3:
-                df.columns = ['nombre', 'club', 'elo']
-            else:
-                print(f"Error: Hoja '{hoja}' no tiene suficientes columnas. Saltando...")
-                continue
+        # Verificar si hay suficientes columnas
+        if len(df.columns) >= 3:
+            df.columns = ['nombre', 'club', 'elo']
         else:
-            # Verificar si hay suficientes columnas
-            if len(df.columns) >= 3:
-                df.columns = ['nombre', 'club', 'elo']
-            else:
-                print(f"Error: Hoja '{hoja}' no tiene suficientes columnas. Saltando...")
-                continue
+            print(f"Error: Hoja '{hoja}' no tiene suficientes columnas. Saltando...")
+            continue
         
         # Filtrar filas vacías
         df = df[df['nombre'].notna() & (df['nombre'] != '')]
