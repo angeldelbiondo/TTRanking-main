@@ -41,6 +41,17 @@ interface Estadisticas {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D']
 
+// --- SOLUCIÓN: Esta función ahora vive fuera para reducir la anidación ---
+function calcularPartidosPorTorneo(torneos: Torneo[], partidos: Partido[]): PartidosPorTorneo[] {
+  return torneos.map((torneo) => {
+    const count = partidos.filter((p) => p.torneo_id === torneo.id).length
+    return {
+      nombre: torneo.nombre,
+      partidos: count
+    }
+  })
+}
+
 export default function EstadisticasSection({ className = '' }) {
   const [stats, setStats] = useState<Estadisticas>({
     totalJugadores: 0,
@@ -57,7 +68,6 @@ export default function EstadisticasSection({ className = '' }) {
     const fetchStats = async () => {
       setLoading(true)
       try {
-        // Obtener todos los datos sin paginación para estadísticas
         const [jugadoresRes, torneosRes, partidosRes, eloRes, clubesRes] = await Promise.all([
           fetch('/api/jugadores?limit=1000'),
           fetch('/api/torneos?limit=1000'),
@@ -66,32 +76,24 @@ export default function EstadisticasSection({ className = '' }) {
           fetch('/api/estadisticas/jugadores-por-club')
         ])
 
-        // Verificar respuestas antes de parsear
         if (!jugadoresRes.ok) throw new Error('Error fetching jugadores')
         if (!torneosRes.ok) throw new Error('Error fetching torneos')
         if (!partidosRes.ok) throw new Error('Error fetching partidos')
         if (!eloRes.ok) throw new Error('Error fetching elo data')
         if (!clubesRes.ok) throw new Error('Error fetching clubes data')
 
-        // Parsear respuestas
         const jugadoresData = await jugadoresRes.json()
         const torneosData = await torneosRes.json()
         const partidosData = await partidosRes.json()
         const eloData: EloPorCategoria[] = await eloRes.json()
         const clubesData: JugadoresPorClub[] = await clubesRes.json()
 
-        // Manejar datos paginados
         const jugadoresArray = jugadoresData.jugadores || []
         const torneosArray = torneosData.torneos || torneosData
         const partidosArray = partidosData.partidos || partidosData
 
-        const partidosPorTorneo: PartidosPorTorneo[] = torneosArray.map((torneo: Torneo) => {
-          const count = partidosArray.filter((p: Partido) => p.torneo_id === torneo.id).length
-          return {
-            nombre: torneo.nombre,
-            partidos: count
-          }
-        })
+        // --- CAMBIO APLICADO: Llamada limpia a la función externa ---
+        const partidosPorTorneo = calcularPartidosPorTorneo(torneosArray, partidosArray)
 
         // Agrupar clubes: top 5 + "Otros"
         const clubesOrdenados = [...clubesData].sort((a, b) => b.jugadores - a.jugadores)
