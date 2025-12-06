@@ -1,14 +1,16 @@
 import pandas as pd
 import mysql.connector
 from mysql.connector import Error
+import os
+from dotenv import load_dotenv
 
 # Configuración de la base de datos
 config = {
-    'user': 'root',
-    'password': 'ognaOrFgBnUrIcCklkrHrtadSgkpJyEo',
-    'host': 'switchback.proxy.rlwy.net',
-    'port': '35971',
-    'database': 'railway',
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'host': os.getenv('DB_HOST'),
+    'port': os.getenv('DB_PORT'),
+    'database': os.getenv('DB_NAME'),
     'raise_on_warnings': True
 }
 
