@@ -1,5 +1,5 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { dirname } from "node:path"; // Antes era "path"
+import { fileURLToPath } from "node:url"; // Antes era "url"
 import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
 import typescriptEslintParser from "@typescript-eslint/parser";

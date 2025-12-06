@@ -31,13 +31,13 @@ def calcular_elo(formula):
             # Manejar múltiples operadores consecutivos
             expr = expr.replace('++', '+').replace('--', '-').replace('+-', '-').replace('-+', '-')
             return eval(expr)
-        except:
+        except Exception:
             return None
     else:
         try:
             # Intentar convertir a número
             return float(formula)
-        except:
+        except Exception:
             return None
 
 # Información de categorías (id y elo_inicial)
