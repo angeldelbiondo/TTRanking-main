@@ -1,7 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-echo "Running SonarQube Scanner..."
-
-# Ruta ABSOLUTA al ejecutable .bat (Esta linea es la clave)
-"C:/Users/angel/Desktop/sonarqube/sonar-scanner-cli-7.3.0.5189-windows-x64/sonar-scanner-7.3.0.5189-windows-x64/bin/sonar-scanner.bat" "-Dsonar.projectVersion=1.0.3" "-Dsonar.token=squ_416309596b9bd4440e9a9a0025b7fb1c05d1c943"
