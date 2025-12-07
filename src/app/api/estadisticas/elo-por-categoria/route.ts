@@ -35,7 +35,7 @@ export async function GET() {
     return NextResponse.json(result);
   }catch (error) {
     // 1. Registra el error real para que lo veas en los logs del servidor.
-    console.error('Error crítico en el endpoint:', error); 
+    console.error('Error en el endpoint elo-por-categoria:', error);
     // 2. Luego devuelve la respuesta al cliente
     return NextResponse.json(
         { message: "Error al obtener estadísticas" },

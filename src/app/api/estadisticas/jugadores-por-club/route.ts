@@ -17,6 +17,8 @@ export async function GET() {
       jugadores: club._count.jugadores
     })));
   } catch (error) {
+    console.error('Error en el endpoint jugadores-por-club:', error);
+
     return NextResponse.json(
       { message: "Error al obtener estadísticas" },
       { status: 500 }

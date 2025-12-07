@@ -6,26 +6,27 @@ import {
 } from 'recharts'
 import Link from 'next/link'
 
-interface Torneo {
+// --- INTERFACES ---
+export interface Torneo {
   id: number
   nombre: string
 }
 
-interface Partido {
+export interface Partido {
   torneo_id: number
 }
 
-interface EloPorCategoria {
+export interface EloPorCategoria {
   categoria: string
   elo_promedio: number
 }
 
-interface JugadoresPorClub {
+export interface JugadoresPorClub {
   club: string
   jugadores: number
 }
 
-interface PartidosPorTorneo {
+export interface PartidosPorTorneo {
   nombre: string
   partidos: number
 }
@@ -41,8 +42,9 @@ interface Estadisticas {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D']
 
-// --- SOLUCIÓN: Esta función ahora vive fuera para reducir la anidación ---
-function calcularPartidosPorTorneo(torneos: Torneo[], partidos: Partido[]): PartidosPorTorneo[] {
+// --- FUNCIONES PURAS (Logic Extraction para SonarQube y Tests) ---
+
+export function calcularPartidosPorTorneo(torneos: Torneo[], partidos: Partido[]): PartidosPorTorneo[] {
   return torneos.map((torneo) => {
     const count = partidos.filter((p) => p.torneo_id === torneo.id).length
     return {
@@ -52,6 +54,25 @@ function calcularPartidosPorTorneo(torneos: Torneo[], partidos: Partido[]): Part
   })
 }
 
+export function procesarClubes(clubesData: JugadoresPorClub[]): JugadoresPorClub[] {
+  const clubesOrdenados = [...clubesData].sort((a, b) => b.jugadores - a.jugadores)
+  const top5 = clubesOrdenados.slice(0, 5)
+  const resto = clubesOrdenados.slice(5)
+  const otrosTotal = resto.reduce((acc, club) => acc + club.jugadores, 0)
+  
+  if (otrosTotal > 0) {
+    top5.push({ club: 'Otros', jugadores: otrosTotal })
+  }
+  return top5
+}
+
+// NUEVAS FUNCIONES EXTRAÍDAS (Para lograr 100% Coverage)
+export const formatTooltipBar = (value: any) => [`${value}`, 'Promedio']
+export const formatTooltipPie = (value: any) => [`${value} jugadores`]
+export const formatLabelPie = ({ name, percent }: any) => `${name}: ${(percent * 100).toFixed(0)}%`
+
+
+// --- COMPONENTE PRINCIPAL ---
 export default function EstadisticasSection({ className = '' }) {
   const [stats, setStats] = useState<Estadisticas>({
     totalJugadores: 0,
@@ -92,25 +113,15 @@ export default function EstadisticasSection({ className = '' }) {
         const torneosArray = torneosData.torneos || torneosData
         const partidosArray = partidosData.partidos || partidosData
 
-        // --- CAMBIO APLICADO: Llamada limpia a la función externa ---
         const partidosPorTorneo = calcularPartidosPorTorneo(torneosArray, partidosArray)
-
-        // Agrupar clubes: top 5 + "Otros"
-        const clubesOrdenados = [...clubesData].sort((a, b) => b.jugadores - a.jugadores)
-        const top5 = clubesOrdenados.slice(0, 5)
-        const resto = clubesOrdenados.slice(5)
-        const otrosTotal = resto.reduce((acc, club) => acc + club.jugadores, 0)
-        
-        if (otrosTotal > 0) {
-          top5.push({ club: 'Otros', jugadores: otrosTotal })
-        }
+        const top5Clubes = procesarClubes(clubesData)
 
         setStats({
           totalJugadores: jugadoresArray.length,
           totalTorneos: torneosArray.length,
           totalPartidos: partidosArray.length,
           eloPorCategoria: eloData,
-          jugadoresPorClub: top5,
+          jugadoresPorClub: top5Clubes,
           partidosPorTorneo
         })
       } catch (error) {
@@ -174,7 +185,8 @@ export default function EstadisticasSection({ className = '' }) {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="categoria" />
               <YAxis />
-              <Tooltip formatter={(value) => [`${value}`, 'Promedio']} />
+              {/* USANDO LA REFERENCIA A LA FUNCIÓN EXTERNA */}
+              <Tooltip formatter={formatTooltipBar} />
               <Legend />
               <Bar dataKey="elo_promedio" name="Promedio" fill="#8884d8" />
             </BarChart>
@@ -194,14 +206,15 @@ export default function EstadisticasSection({ className = '' }) {
                 fill="#8884d8"
                 dataKey="jugadores"
                 nameKey="club"
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                /* USANDO LA REFERENCIA A LA FUNCIÓN EXTERNA */
+                label={formatLabelPie}
               >
                 {stats.jugadoresPorClub.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => [`${value} jugadores`]} />
-              
+              {/* USANDO LA REFERENCIA A LA FUNCIÓN EXTERNA */}
+              <Tooltip formatter={formatTooltipPie} />
             </PieChart>
           </ResponsiveContainer>
         </div>
