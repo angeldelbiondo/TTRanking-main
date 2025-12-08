@@ -17,7 +17,9 @@ export async function GET() {
       jugadores: club._count.jugadores
     })));
   } catch (error) {
-    console.error('Error en el endpoint jugadores-por-club:', error);
+  console.error(error); // <--- Esto satisface a SonarQube
+  return NextResponse.json({ message: "Error...", status: 500 }, { status: 500 });
+  
 
     return NextResponse.json(
       { message: "Error al obtener estadísticas" },
