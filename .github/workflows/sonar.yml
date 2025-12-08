@@ -22,15 +22,22 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      # 1. GENERAR EL REPORTE DE COVERAGE
+      # 1. GENERAR EL REPORTE DE COVERAGE (Importante para salir del 0%)
       - name: Run Tests
         run: npm test
 
-      # 2. INSTALAR Y CORRER EL ESCÁNER (Inyectando Token Manualmente)
+      # 2. ESCANEO MANUAL (Fuerza Bruta)
+      # Instalamos el escáner y le pasamos TODOS los datos manualmente
       - name: Run SonarQube Scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           npm install -g sonarqube-scanner
-          sonar-scanner -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          sonar-scanner \
+            -Dsonar.organization=angeldelbiondo \
+            -Dsonar.projectKey=angeldelbiondo_TTRanking-main \
+            -Dsonar.sources=src \
+            -Dsonar.tests=__tests__ \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
