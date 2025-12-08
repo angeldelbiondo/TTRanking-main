@@ -2,16 +2,15 @@
   "name": "ranking-atta",
   "version": "0.1.0",
   "private": true,
-"scripts": {
+  "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest --coverage",
-    "sonar": "sonar-scanner",  
+    "sonar": "sonar-scanner",
     "prepare": "husky"
   },
-  
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.11.0",
@@ -47,5 +46,4 @@
     "ts-node": "^10.9.2",
     "typescript": "^5"
   }
-  
 }
