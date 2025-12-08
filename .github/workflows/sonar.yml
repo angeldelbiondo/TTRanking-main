@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   sonarcloud:
@@ -24,14 +22,15 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      # 1. CORRER TESTS (Genera el coverage)
+      # 1. GENERAR EL REPORTE DE COVERAGE
       - name: Run Tests
         run: npm test
 
-      # 2. ESCANEAR CON NPM (La nueva forma)
-      # Usamos el token directamente como variable de entorno
-      - name: SonarQube Scan via NPM
+      # 2. INSTALAR Y CORRER EL ESCÁNER (Versión Manual)
+      - name: Run SonarQube Scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: npm run sonar
+        run: |
+          npm install -g sonarqube-scanner
+          sonar-scanner
