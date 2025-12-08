@@ -16,14 +16,12 @@ export async function GET() {
       club: club.nombre,
       jugadores: club._count.jugadores
     })));
-  } catch (error) {
-  console.error(error); // <--- Esto satisface a SonarQube
-  return NextResponse.json({ message: "Error...", status: 500 }, { status: 500 });
-  
+} catch (error) {
+  console.error('Error al obtener estadísticas:', error); // <--- AÑADIDO
+  return NextResponse.json(
+    { message: "Error al obtener estadísticas", status: 500 },
+    { status: 500 }
+  );
 
-    return NextResponse.json(
-      { message: "Error al obtener estadísticas" },
-      { status: 500 }
-    );
   }
 }

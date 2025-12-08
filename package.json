@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --coverage",
-    "sonar": "sonar-scanner",
-    "prepare": "husky"
+    "prepare": "husky",
+    "sonar": "npm test && lcov-result-merger 'coverage/**/*.info' | sed 's/SF:src/SF:/g' > coverage/merged-lcov.info && sonar-scanner"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

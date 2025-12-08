@@ -10,7 +10,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     // 2. Usamos Number.isNaN que no hace coerción de tipos (es más estricto)
     if (Number.isNaN(clubId)) {
-        return NextResponse.json({ error: 'ID de club inválido' }, { status: 400 })
+return NextResponse.json({ error: 'ID de club inválido' }, { status: 400 });
 }
 
     try {
