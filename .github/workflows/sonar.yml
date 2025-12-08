@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Importante para un mejor análisis de relevancia
+          fetch-depth: 0  # Importante para que SonarQube no se queje
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -24,13 +24,13 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      # 1. EJECUTAR TESTS Y GENERAR COVERAGE
+      # 1. CORREMOS LOS TESTS (Esto genera la carpeta coverage/)
       - name: Run Tests
         run: npm test
 
-      # 2. ESCANEAR Y SUBIR A SONARCLOUD (USANDO LA NUEVA ACCIÓN)
+      # 2. ESCANEAMOS (Usamos la versión 5.0.0 que es la estable)
       - name: SonarQube Cloud Scan
-        uses: SonarSource/sonarqube-scan-action@v4
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Se genera automático
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # El secreto que guardaste
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
